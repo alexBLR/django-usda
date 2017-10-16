@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from taggit.managers import TaggableManager
 import datetime
 
 
@@ -11,6 +12,7 @@ import datetime
 # Based on Table 4 - Food Description File
 # ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 # ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# models.DecimalField(max_digits=13, decimal_places=3).contribute_to_class(Food, 'calories')
 
 class Food(models.Model):
 
@@ -46,11 +48,25 @@ class Food(models.Model):
                                      decimal_places=2, blank=True, null=True, help_text=_("Factor for calculating calories from fat."))
     cho_factor = models.DecimalField(_("CHO Factor"), db_column="CHO_Factor", max_digits=6,
                                      decimal_places=2, blank=True, null=True, help_text=_("Factor for calculating calories from carbohydrate."))
-
+    calories = models.DecimalField(max_digits=13, decimal_places=3)
+    insulin_load = models.DecimalField(max_digits=13, decimal_places=3)
+    insulinogenic = models.DecimalField(max_digits=13, decimal_places=3)
+    ratio = models.DecimalField(max_digits=13, decimal_places=3)
+    energy_density =  models.DecimalField(max_digits=6, decimal_places=2)
+    nd_weight =  models.DecimalField(max_digits=6, decimal_places=2)
+    nd_calorie =  models.DecimalField(max_digits=6, decimal_places=2)
+    il_score = models.DecimalField(max_digits=6, decimal_places=2)
+    ed_score = models.DecimalField(max_digits=6, decimal_places=2)
+    wilders_formula = models.DecimalField(max_digits=6, decimal_places=2)
+    tags = TaggableManager()
+    ingredient_name = models.CharField(max_length=200,blank=True, null=True)
+    slug = models.CharField(blank=True, max_length=255)
+    ketonumber = models.DecimalField(max_digits=5, decimal_places=2)
     def __unicode__(self):
-        return self.name
+        return unicode(self.short_description)
 
-
+    def get_absolute_url(self):
+        return '/foods/micronutrients-for-'+self.slug
 # Based on Table 5 - Food Group Description File
 # ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 # ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -122,6 +138,10 @@ class NutrientData(models.Model):
                              help_text=_("5-digit Nutrient Databank number."))
     nutrient = models.ForeignKey('Nutrient', db_column="Nutr_No", help_text=_(
         "Unique 3-digit identifier code for a nutrient. "))
+    raw_nd_calorie =  models.DecimalField(max_digits=11, decimal_places=3)
+    adjusted_nd_calorie =  models.DecimalField(max_digits=11, decimal_places=3)
+    raw_nd_weight =  models.DecimalField(max_digits=11, decimal_places=3)
+    adjusted_nd_weight =  models.DecimalField(max_digits=11, decimal_places=3)
     ounce = models.DecimalField(_("Ounce"), db_column="Nutr_Val", max_digits=13,
                                 decimal_places=3, help_text=_("Amount in 100 grams, edible portion."))
     data_points = models.IntegerField(_("Data points"), db_column="Num_Data_Pts", max_length=5, help_text=_(
@@ -181,10 +201,19 @@ class Nutrient(models.Model):
         "Number of decimal places to which a nutrient value is rounded. "))
     order = models.IntegerField(_("Order"), db_column="SR_Order", max_length=6, help_text=_(
         "Used to sort nutrient records in the same order as various reports produced from SR. "))
-
+    rdi = models.DecimalField(max_digits=13, decimal_places=3)
+    rdi_male = models.DecimalField(max_digits=7, decimal_places=3)
+    rdi_female = models.DecimalField(max_digits=7, decimal_places=3)
+    rdi_kg = models.DecimalField(max_digits=7, decimal_places=3)
+    rdi_75 = models.DecimalField(max_digits=7, decimal_places=3)
+    rdi_100 = models.DecimalField(max_digits=7, decimal_places=3)
+    rdi_pregnant = models.DecimalField(max_digits=7, decimal_places=3)
+    rdi_breast = models.DecimalField(max_digits=7, decimal_places=3)
+    slug = models.CharField(blank=True, max_length=255)
     def __unicode__(self):
         return self.name
-
+    def get_absolute_url(self):
+        return '/top-100-foods-and-recipes-high-in-'+self.slug
 
 # Based on Table 10 - Source Code File
 # ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
