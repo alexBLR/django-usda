@@ -62,6 +62,11 @@ class Food(models.Model):
     ingredient_name = models.CharField(max_length=200,blank=True, null=True)
     slug = models.CharField(blank=True, max_length=255)
     ketonumber = models.DecimalField(max_digits=5, decimal_places=2)
+    il_optimiser_score = models.DecimalField(max_digits=6, decimal_places=2)
+    ed_optimiser_score = models.DecimalField(max_digits=6, decimal_places=2)
+    optimiser_name = models.CharField(max_length=200,blank=True, null=True)
+    insulin_load_optimiser = models.DecimalField(max_digits=13, decimal_places=3)
+    insulinogenic_optimiser = models.DecimalField(max_digits=13, decimal_places=3)
     def __unicode__(self):
         return unicode(self.short_description)
 
@@ -140,6 +145,7 @@ class NutrientData(models.Model):
         "Unique 3-digit identifier code for a nutrient. "))
     raw_nd_calorie =  models.DecimalField(max_digits=11, decimal_places=3)
     adjusted_nd_calorie =  models.DecimalField(max_digits=11, decimal_places=3)
+    optimiser_nd_calorie = models.DecimalField(max_digits=11, decimal_places=3)
     raw_nd_weight =  models.DecimalField(max_digits=11, decimal_places=3)
     adjusted_nd_weight =  models.DecimalField(max_digits=11, decimal_places=3)
     ounce = models.DecimalField(_("Ounce"), db_column="Nutr_Val", max_digits=13,
