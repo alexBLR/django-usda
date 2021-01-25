@@ -23,7 +23,7 @@ class Food(models.Model):
     id = models.CharField(_("Nutrient Databank number"), db_column="NDB_No", max_length=5, primary_key=True, help_text=_(
         "5-digit NutrientDatabank number that uniquelyidentifies a food item. If this field is defined asnumeric, the leading zero will be lost. "))
     food_group = models.ForeignKey('FoodGroup', db_column="FdGrp_Cd", help_text=_(
-        "4-digit code indicating food group to which a food item belongs. "))
+        "4-digit code indicating food group to which a food item belongs. "), on_delete=models.CASCADE)
     long_description = models.CharField(_("Long description"), db_column="Long_Desc",
                                         max_length=200, help_text=_("200-character description of food item. "))
     short_description = models.CharField(_("Short description"), db_column="Shrt_Desc", max_length=60, help_text=_(
@@ -104,7 +104,7 @@ class FoodLanguaLFactor(models.Model):
     food = models.ForeignKey('Food', db_column="NDB_No", help_text=_(
         "5-digit NutrientDatabank number that uniquelyidentifies a food item. If this field is defined asnumeric, the leading zero will be lost. "))
     langual_factor = models.ForeignKey('LanguaLFactor', db_column="Factor_Code", help_text=_(
-        "The LanguaL factor from the Thesaurus."))
+        "The LanguaL factor from the Thesaurus."), on_delete=models.CASCADE)
 
     def __unicode__(self):
         return "%s - %s" % (self.food, self.langual_factor)
@@ -140,9 +140,9 @@ class NutrientData(models.Model):
         verbose_name_plural = _('Nutrient Datas')
         unique_together = ("food", "nutrient")
     food = models.ForeignKey('Food', db_column="NDB_No",
-                             help_text=_("5-digit Nutrient Databank number."))
+                             help_text=_("5-digit Nutrient Databank number."), on_delete=models.CASCADE)
     nutrient = models.ForeignKey('Nutrient', db_column="Nutr_No", help_text=_(
-        "Unique 3-digit identifier code for a nutrient. "))
+        "Unique 3-digit identifier code for a nutrient. "), on_delete=models.CASCADE)
     raw_nd_calorie =  models.DecimalField(max_digits=11, decimal_places=3)
     adjusted_nd_calorie =  models.DecimalField(max_digits=11, decimal_places=3)
     optimiser_nd_calorie = models.DecimalField(max_digits=11, decimal_places=3)
@@ -155,11 +155,11 @@ class NutrientData(models.Model):
     error = models.DecimalField(_("Error (Standard)"), db_column="Std_Error", max_digits=14, decimal_places=3, blank=True, null=True, help_text=_(
         "Standard error of the mean. Null if cannot be calculated. The standard error is also not given if the number of data points is less than three."))
     data_type = models.ForeignKey(
-        'Source', db_column="Src_Cd", help_text=_("Code indicating type of data."))
+        'Source', db_column="Src_Cd", help_text=_("Code indicating type of data."), on_delete=models.CASCADE)
     derivation = models.ForeignKey('Derivation', db_column='Deriv_Cd', blank=True, null=True, help_text=_(
-        "Data Derivation Code giving specific information on how the value is determined. This field is populated only for items added or updated starting with SR14."))
+        "Data Derivation Code giving specific information on how the value is determined. This field is populated only for items added or updated starting with SR14."), on_delete=models.CASCADE)
     food_reference = models.ForeignKey('Food', db_column="Ref_NDB_No", related_name="food_reference_set", blank=True, null=True, help_text=_(
-        "NDB number of the item used tocalculate a missingvalue. Populated onlyfor items added or updatedstarting with SR14."))
+        "NDB number of the item used tocalculate a missingvalue. Populated onlyfor items added or updatedstarting with SR14."), on_delete=models.CASCADE)
     added_nutrient = models.BooleanField(_("Added nutrient"), db_column="Add_Nutr_Mark", default=False, help_text=_(
         "Indicates a vitamin or mineral addedfor fortificationor enrichment. This fieldis populated for ready-to-eat breakfast cereals and many brand-name hotcereals in food group 8."))
     studies = models.IntegerField(
@@ -271,7 +271,7 @@ class Weight(models.Model):
         ordering = ['name']
         unique_together = ("food", "sequence")
     food = models.ForeignKey('Food', db_column="NDB_No",
-                             help_text=_("5-digit Nutrient Databank number."))
+                             help_text=_("5-digit Nutrient Databank number."), on_delete=models.CASCADE)
     sequence = models.CharField(
         _("Sequence"), db_column="Seq", max_length=5, help_text=_("Sequence number."))
     amount = models.DecimalField(_("Amount"), db_column="Amount", max_digits=8,
@@ -308,13 +308,13 @@ class Footnote(models.Model):
         verbose_name_plural = _('LanguaL factors')
         ordering = ['name']
     food = models.ForeignKey('Food', db_column="NDB_No",
-                             help_text=_("5-digit Nutrient Databank number."))
+                             help_text=_("5-digit Nutrient Databank number."), on_delete=models.CASCADE)
     sequence = models.CharField(_("Sequence"), db_column="Footnt_No", max_length=4, help_text=_(
         " Sequence number. Ifa given footnote applies tomore than one nutrient number, the same footnotenumber is used. As a result, this file cannot beindexed. "))
     type = models.CharField(_("Type"), db_column="Footnt_Typ", max_length=1, choices=FOOTNOTE_CHOICES, help_text=_(
         "Type of footnote:D = footnote adding information to the fooddescription;M = footnote adding information to measuredescription;N = footnote providing additional information on anutrient value. If the Footnt_typ = N, the Nutr_No willalso be filled in. "))
     nutrient = models.ForeignKey('Nutrient', db_column="Nutr_No", blank=True, null=True, help_text=_(
-        " Unique 3-digit identifier code for a nutrient to which footnote applies. "))
+        " Unique 3-digit identifier code for a nutrient to which footnote applies. "), on_delete=models.CASCADE)
     name = models.CharField(_("Name"), db_column="Footnt_Txt",
                             max_length=200, help_text=_("Footnote text."))
 
@@ -333,11 +333,11 @@ class DataLink(models.Model):
         verbose_name_plural = _('Data links')
         unique_together = ("food", "nutrient", 'data_source')
     food = models.ForeignKey('Food', db_column="NDB_No",
-                             help_text=_("5-digit Nutrient Databank number."))
+                             help_text=_("5-digit Nutrient Databank number."), on_delete=models.CASCADE)
     nutrient = models.ForeignKey('Nutrient', db_column="Nutr_No", help_text=_(
-        "Unique 3-digit identifier code for a nutrient. "))
+        "Unique 3-digit identifier code for a nutrient. "), on_delete=models.CASCADE)
     data_source = models.ForeignKey('DataSource', db_column="DataSrc_ID", help_text=_(
-        "Unique ID identifying the reference/source. "))
+        "Unique ID identifying the reference/source. "), on_delete=models.CASCADE)
 
     def __unicode__(self):
         return "%s - %s - %s" % (food, nutrient, data_source)
