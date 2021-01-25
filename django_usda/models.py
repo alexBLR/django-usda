@@ -102,7 +102,7 @@ class FoodLanguaLFactor(models.Model):
         verbose_name_plural = _('Food LanguaL factors')
         unique_together = ("food", "langual_factor")
     food = models.ForeignKey('Food', db_column="NDB_No", help_text=_(
-        "5-digit NutrientDatabank number that uniquelyidentifies a food item. If this field is defined asnumeric, the leading zero will be lost. "))
+        "5-digit NutrientDatabank number that uniquelyidentifies a food item. If this field is defined asnumeric, the leading zero will be lost. "), on_delete=models.CASCADE)
     langual_factor = models.ForeignKey('LanguaLFactor', db_column="Factor_Code", help_text=_(
         "The LanguaL factor from the Thesaurus."), on_delete=models.CASCADE)
 
