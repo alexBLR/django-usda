@@ -20,7 +20,7 @@ class FoodSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Food
-        fields = ("id", "food_group", "long_description", "short_description", "name", "manufacturer_name", "survey",
+        fields = ("id", "food_group", "long_description", "name", "manufacturer_name", "survey",
                   "refuse_description", "refuse_percentage", "scientific_name", "n_factor", "pro_factor", "fat_factor", "cho_factor")
 
 
@@ -30,7 +30,7 @@ class FoodViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,)
     filter_fields = ("id")
     search_fields = (
-        "long_description", "short_description", "name", "manufacturer_name")
+        "long_description", "name", "manufacturer_name")
 
 
 class FoodGroupSerializer(serializers.ModelSerializer):
@@ -200,7 +200,7 @@ class FoodInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Food
-        fields = ("id", "food_group", "long_description", "short_description", "name", "manufacturer_name", "survey", "refuse_description", "refuse_percentage",
+        fields = ("id", "food_group", "long_description", "name", "manufacturer_name", "survey", "refuse_description", "refuse_percentage",
                   "scientific_name", "n_factor", "pro_factor", "fat_factor", "cho_factor", 'footnote_set', 'nutrientdata_set', 'weight_set', 'foodlangualfactor_set', 'datalink_set')
 
 
