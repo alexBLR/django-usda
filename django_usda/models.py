@@ -26,26 +26,6 @@ class Food(models.Model):
         "4-digit code indicating food group to which a food item belongs. "), on_delete=models.CASCADE)
     long_description = models.CharField(_("Long description"), db_column="Long_Desc",
                                         max_length=200, help_text=_("200-character description of food item. "))
-    name = models.CharField(_("Name (Common)"), db_column="ComName", max_length=100, blank=True, null=True, help_text=_(
-        "Other names commonly used to describe a food,including local or regionalnames for various foods,for example, 'soda' or'pop' for 'carbonatedbeverages.' "))
-    manufacturer_name = models.CharField(_("Manufacturer"), db_column="ManufacName", max_length=65, blank=True, null=True, help_text=_(
-        "Indicates the company that manufactured the product, when appropriate. "))
-    survey = models.BooleanField(_("Survey"), db_column="Survey", default=False, help_text=_(
-        "Indicates if the food item is used in the USDA Foodand Nutrient Database for Dietary Studies (FNDDS)and thus has a complete nutrient profile for the 65FNDDS nutrients. "))
-    refuse_description = models.CharField(_("Refuse description"), db_column="Ref_desc", max_length=135, blank=True, null=True, help_text=_(
-        "Description of inedible parts of a food item (refuse),such as seeds or bone. "))
-    refuse_percentage = models.IntegerField(
-        _("Refuse Percentage"), db_column="Refuse", max_length=2, blank=True, null=True, help_text=_("Percentage of refuse."))
-    scientific_name = models.CharField(_("Scientific name"), db_column="SciName", max_length=65, blank=True, null=True, help_text=_(
-        "Scientific name of the food item. Given for the least processed form of the food (usually raw), if applicable. "))
-    n_factor = models.DecimalField(_("N Factor"), db_column="N_Factor", max_digits=6,
-                                   decimal_places=2, blank=True, null=True, help_text=_("Factor for converting nitrogen to protein."))
-    pro_factor = models.DecimalField(_("Pro Factor"), db_column="Pro_Factor", max_digits=6,
-                                     decimal_places=2, blank=True, null=True, help_text=_("Factor for calculating calories from protein."))
-    fat_factor = models.DecimalField(_("Fat Factor"), db_column="Fat_Factor", max_digits=6,
-                                     decimal_places=2, blank=True, null=True, help_text=_("Factor for calculating calories from fat."))
-    cho_factor = models.DecimalField(_("CHO Factor"), db_column="CHO_Factor", max_digits=6,
-                                     decimal_places=2, blank=True, null=True, help_text=_("Factor for calculating calories from carbohydrate."))
     calories = models.DecimalField(max_digits=13, decimal_places=3)
     insulin_load = models.DecimalField(max_digits=13, decimal_places=3)
     insulinogenic = models.DecimalField(max_digits=13, decimal_places=3)
@@ -148,37 +128,9 @@ class NutrientData(models.Model):
     adjusted_nd_weight =  models.DecimalField(max_digits=11, decimal_places=3)
     ounce = models.DecimalField(_("Ounce"), db_column="Nutr_Val", max_digits=13,
                                 decimal_places=3, help_text=_("Amount in 100 grams, edible portion."))
-    data_points = models.IntegerField(_("Data points"), db_column="Num_Data_Pts", max_length=5, help_text=_(
-        "Number of data points (previously called Sample_Ct)is the number of analyses used to calculate thenutrient value. If the numberof data points is 0, thevalue was calculated or imputed."))
-    error = models.DecimalField(_("Error (Standard)"), db_column="Std_Error", max_digits=14, decimal_places=3, blank=True, null=True, help_text=_(
-        "Standard error of the mean. Null if cannot be calculated. The standard error is also not given if the number of data points is less than three."))
     data_type = models.ForeignKey(
         'Source', db_column="Src_Cd", help_text=_("Code indicating type of data."), on_delete=models.CASCADE)
-    derivation = models.ForeignKey('Derivation', db_column='Deriv_Cd', blank=True, null=True, help_text=_(
-        "Data Derivation Code giving specific information on how the value is determined. This field is populated only for items added or updated starting with SR14."), on_delete=models.CASCADE)
-    food_reference = models.ForeignKey('Food', db_column="Ref_NDB_No", related_name="food_reference_set", blank=True, null=True, help_text=_(
-        "NDB number of the item used tocalculate a missingvalue. Populated onlyfor items added or updatedstarting with SR14."), on_delete=models.CASCADE)
-    added_nutrient = models.BooleanField(_("Added nutrient"), db_column="Add_Nutr_Mark", default=False, help_text=_(
-        "Indicates a vitamin or mineral addedfor fortificationor enrichment. This fieldis populated for ready-to-eat breakfast cereals and many brand-name hotcereals in food group 8."))
-    studies = models.IntegerField(
-        _("Studies (amount)"), db_column="Num_Studies", blank=True, null=True)
-    minimum_value = models.DecimalField(
-        _("Minimum value"), db_column="Min", max_digits=14, decimal_places=3, blank=True, null=True)
-    maximum_value = models.DecimalField(
-        _("Maximum value"), db_column="Max", max_digits=14, decimal_places=3, blank=True, null=True)
-    degrees_of_freedom = models.IntegerField(
-        _("Degrees of freedom"), db_column="DF", max_length=4, blank=True, null=True)
-    lower_error_bound = models.DecimalField(_("Lower error bound"), db_column="Low_EB",
-                                            max_digits=14, decimal_places=3, blank=True, null=True, help_text=_("Lower 95% error bound."))
-    uppper_error_bound = models.DecimalField(
-        _("Upper error bound"), db_column="Up_EB", max_digits=14, decimal_places=3, blank=True, null=True, help_text=_("Upper 95% error bound."))
-    statistical_comments = models.CharField(_("Statistical comments"), db_column="Stat_cmt", max_length=10,
-                                            blank=True, null=True, help_text=_("Statistical comments. See documentation page 33."))
-    last_modified = models.CharField(_("Last modified"), db_column="AddMod_Date", max_length=10, blank=True, null=True, help_text=_(
-        "Indicates when a value was either added to the database or last modified."))
-    confidence_code = models.IntegerField(_("Confidence code"), db_column="CC", max_length=1, blank=True, null=True, help_text=_(
-        " Confidence Code indicating data quality, based on evaluation of sample plan, sample handling, analytical method, analytic al quality control, and number of samples analyzed. Not included in this release, but is planned for future releases. "))
-
+    
     def __unicode__(self):
         return "%s - %s" % (self.food, self.nutrient)
 
@@ -208,6 +160,8 @@ class Nutrient(models.Model):
     rdi = models.DecimalField(max_digits=13, decimal_places=3)
     rdi_male = models.DecimalField(max_digits=7, decimal_places=3)
     rdi_female = models.DecimalField(max_digits=7, decimal_places=3)
+    oni_male = models.DecimalField(max_digits=7, decimal_places=3)
+    oni_female = models.DecimalField(max_digits=7, decimal_places=3)
     rdi_kg = models.DecimalField(max_digits=7, decimal_places=3)
     rdi_75 = models.DecimalField(max_digits=7, decimal_places=3)
     rdi_100 = models.DecimalField(max_digits=7, decimal_places=3)
