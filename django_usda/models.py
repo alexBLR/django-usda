@@ -26,8 +26,6 @@ class Food(models.Model):
         "4-digit code indicating food group to which a food item belongs. "), on_delete=models.CASCADE)
     long_description = models.CharField(_("Long description"), db_column="Long_Desc",
                                         max_length=200, help_text=_("200-character description of food item. "))
-    short_description = models.CharField(_("Short description"), db_column="Shrt_Desc", max_length=60, help_text=_(
-        "60-character abbreviated description of food item.Generated from the 200-character description usingabbreviations in Appendix A. If short description islonger than 60 characters, additional abbreviationsare made. "))
     name = models.CharField(_("Name (Common)"), db_column="ComName", max_length=100, blank=True, null=True, help_text=_(
         "Other names commonly used to describe a food,including local or regionalnames for various foods,for example, 'soda' or'pop' for 'carbonatedbeverages.' "))
     manufacturer_name = models.CharField(_("Manufacturer"), db_column="ManufacName", max_length=65, blank=True, null=True, help_text=_(
