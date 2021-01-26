@@ -19,7 +19,6 @@ class Food(models.Model):
     class Meta:
         verbose_name = _('Fooddescription')
         verbose_name_plural = _('Fooddescriptions')
-        ordering = ['name']
     id = models.CharField(_("Nutrient Databank number"), db_column="NDB_No", max_length=5, primary_key=True, help_text=_(
         "5-digit NutrientDatabank number that uniquelyidentifies a food item. If this field is defined asnumeric, the leading zero will be lost. "))
     food_group = models.ForeignKey('FoodGroup', db_column="FdGrp_Cd", help_text=_(
