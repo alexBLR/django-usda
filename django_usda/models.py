@@ -43,7 +43,7 @@ class Food(models.Model):
     ed_optimiser_score = models.DecimalField(max_digits=6, decimal_places=2)
     optimiser_name = models.CharField(max_length=200,blank=True, null=True)
     insulin_load_optimiser = models.DecimalField(max_digits=13, decimal_places=3)
-    insulinogenic_optimiser = models.DecimalField(max_digits=13, decimal_places=3)
+    insulinogenic_optimiser = models.FloatField(blank=True, null=True)
     def __unicode__(self):
         return unicode(self.short_description)
 
