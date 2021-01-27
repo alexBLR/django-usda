@@ -25,24 +25,24 @@ class Food(models.Model):
         "4-digit code indicating food group to which a food item belongs. "), on_delete=models.CASCADE)
     long_description = models.CharField(_("Long description"), db_column="Long_Desc",
                                         max_length=200, help_text=_("200-character description of food item. "))
-    calories = models.DecimalField(max_digits=13, decimal_places=3)
-    insulin_load = models.DecimalField(max_digits=13, decimal_places=3)
-    insulinogenic = models.DecimalField(max_digits=13, decimal_places=3)
-    ratio = models.DecimalField(max_digits=13, decimal_places=3)
-    energy_density =  models.DecimalField(max_digits=6, decimal_places=2)
-    nd_weight =  models.DecimalField(max_digits=6, decimal_places=2)
-    nd_calorie =  models.DecimalField(max_digits=6, decimal_places=2)
-    il_score = models.DecimalField(max_digits=6, decimal_places=2)
-    ed_score = models.DecimalField(max_digits=6, decimal_places=2)
-    wilders_formula = models.DecimalField(max_digits=6, decimal_places=2)
+    calories = models.FloatField(blank=True, null=True)
+    insulin_load = models.FloatField(blank=True, null=True)
+    insulinogenic = models.FloatField(blank=True, null=True)
+    ratio = models.FloatField(blank=True, null=True)
+    energy_density =  models.FloatField(blank=True, null=True)
+    nd_weight =  models.FloatField(blank=True, null=True)
+    nd_calorie =  models.FloatField(blank=True, null=True)
+    il_score = models.FloatField(blank=True, null=True)
+    ed_score = models.FloatField(blank=True, null=True)
+    wilders_formula = models.FloatField(blank=True, null=True)
     tags = TaggableManager()
     ingredient_name = models.CharField(max_length=200,blank=True, null=True)
     slug = models.CharField(blank=True, max_length=255)
-    ketonumber = models.DecimalField(max_digits=5, decimal_places=2)
-    il_optimiser_score = models.DecimalField(max_digits=6, decimal_places=2)
-    ed_optimiser_score = models.DecimalField(max_digits=6, decimal_places=2)
+    ketonumber = models.FloatField(blank=True, null=True)
+    il_optimiser_score = models.FloatField(blank=True, null=True)
+    ed_optimiser_score = models.FloatField(blank=True, null=True)
     optimiser_name = models.CharField(max_length=200,blank=True, null=True)
-    insulin_load_optimiser = models.DecimalField(max_digits=13, decimal_places=3)
+    insulin_load_optimiser = models.FloatField(blank=True, null=True)
     insulinogenic_optimiser = models.FloatField(blank=True, null=True)
     def __unicode__(self):
         return unicode(self.short_description)
@@ -120,13 +120,12 @@ class NutrientData(models.Model):
                              help_text=_("5-digit Nutrient Databank number."), on_delete=models.CASCADE)
     nutrient = models.ForeignKey('Nutrient', db_column="Nutr_No", help_text=_(
         "Unique 3-digit identifier code for a nutrient. "), on_delete=models.CASCADE)
-    raw_nd_calorie =  models.DecimalField(max_digits=11, decimal_places=3)
-    adjusted_nd_calorie =  models.DecimalField(max_digits=11, decimal_places=3)
-    optimiser_nd_calorie = models.DecimalField(max_digits=11, decimal_places=3)
-    raw_nd_weight =  models.DecimalField(max_digits=11, decimal_places=3)
-    adjusted_nd_weight =  models.DecimalField(max_digits=11, decimal_places=3)
-    ounce = models.DecimalField(_("Ounce"), db_column="Nutr_Val", max_digits=13,
-                                decimal_places=3, help_text=_("Amount in 100 grams, edible portion."))
+    raw_nd_calorie =  models.FloatField(blank=True, null=True)
+    adjusted_nd_calorie =  models.FloatField(blank=True, null=True)
+    optimiser_nd_calorie = models.FloatField(blank=True, null=True)
+    raw_nd_weight =  models.FloatField(blank=True, null=True)
+    adjusted_nd_weight = models.FloatField(blank=True, null=True)
+    ounce = models.FloatField(_("Ounce"), db_column="Nutr_Val", help_text=_("Amount in 100 grams, edible portion."))
     data_type = models.ForeignKey(
         'Source', db_column="Src_Cd", help_text=_("Code indicating type of data."), on_delete=models.CASCADE)
     
@@ -156,16 +155,16 @@ class Nutrient(models.Model):
         "Number of decimal places to which a nutrient value is rounded. "))
     order = models.IntegerField(_("Order"), db_column="SR_Order", max_length=6, help_text=_(
         "Used to sort nutrient records in the same order as various reports produced from SR. "))
-    rdi = models.DecimalField(max_digits=13, decimal_places=3)
-    rdi_male = models.DecimalField(max_digits=7, decimal_places=3)
-    rdi_female = models.DecimalField(max_digits=7, decimal_places=3)
-    oni_male = models.DecimalField(max_digits=7, decimal_places=3)
-    oni_female = models.DecimalField(max_digits=7, decimal_places=3)
-    rdi_kg = models.DecimalField(max_digits=7, decimal_places=3)
-    rdi_75 = models.DecimalField(max_digits=7, decimal_places=3)
-    rdi_100 = models.DecimalField(max_digits=7, decimal_places=3)
-    rdi_pregnant = models.DecimalField(max_digits=7, decimal_places=3)
-    rdi_breast = models.DecimalField(max_digits=7, decimal_places=3)
+    rdi = models.FloatField(blank=True, null=True)
+    rdi_male = models.FloatField(blank=True, null=True)
+    rdi_female = models.FloatField(blank=True, null=True)
+    oni_male = models.FloatField(blank=True, null=True)
+    oni_female = models.FloatField(blank=True, null=True)
+    rdi_kg = models.FloatField(blank=True, null=True)
+    rdi_75 = models.FloatField(blank=True, null=True)
+    rdi_100 = models.FloatField(blank=True, null=True)
+    rdi_pregnant = models.FloatField(blank=True, null=True)
+    rdi_breast = models.FloatField(blank=True, null=True)
     slug = models.CharField(blank=True, max_length=255)
     def __unicode__(self):
         return self.name
@@ -225,16 +224,14 @@ class Weight(models.Model):
                              help_text=_("5-digit Nutrient Databank number."), on_delete=models.CASCADE)
     sequence = models.CharField(
         _("Sequence"), db_column="Seq", max_length=5, help_text=_("Sequence number."))
-    amount = models.DecimalField(_("Amount"), db_column="Amount", max_digits=8,
-                                 decimal_places=3, help_text=_("Unit modifier (for example, 1 in '1 cup'). "))
+    amount = models.FloatField(_("Amount"), db_column="Amount", help_text=_("Unit modifier (for example, 1 in '1 cup'). "))
     name = models.CharField(_("Name"), db_column="Msre_Desc", max_length=84, help_text=_(
         "Description (for example, cup, diced, and 1-inch pieces). "))
-    grams = models.DecimalField(_("Grams"), db_column="Gm_Wgt",
-                                max_digits=8, decimal_places=1, help_text=_("Gram weight."))
+    grams = models.FloatField(_("Grams"), db_column="Gm_Wgt", help_text=_("Gram weight."))
     data_points = models.IntegerField(_("Data points"), db_column="Num_Data_Pts",
                                       max_length=3, blank=True, null=True, help_text=_("Number of data points. "))
-    standard_derivation = models.DecimalField(
-        _("Derivation (Standard)"), db_column="Std_Dev", max_digits=10, decimal_places=3, blank=True, null=True)
+    standard_derivation = models.FloatField(
+        _("Derivation (Standard)"), db_column="Std_Dev", blank=True, null=True)
 
     def __unicode__(self):
         return self.name
